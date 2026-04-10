@@ -1,32 +1,92 @@
-import React from 'react';
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>REBA RWANDA PREMIER LEAGUE LIVE</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background-color: #0f172a; /* Deep Navy/Black */
+            color: #f8fafc;
+        }
+        .video-aspect-ratio {
+            position: relative;
+            padding-top: 56.25%; /* 16:9 Aspect Ratio */
+        }
+        .video-aspect-ratio iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body class="font-sans">
 
-// LiveStream Component for REBA RWANDA
-function LiveStream() {
-  // Video ID from the Rwanda vs Grenada highlights
-  const videoId = "xIHNb-KWiPw"; 
-  
-  return (
-    <div className="flex flex-col items-center bg-gray-900 p-6 rounded-lg shadow-xl">
-      <h2 className="text-2xl font-bold text-yellow-500 mb-4">
-        LATEST HIGHLIGHTS: RWANDA VS GRENADA
-      </h2>
-      
-      <div className="relative w-full overflow-hidden pt-[56.25%] rounded-md border-4 border-blue-600">
-        <iframe
-          className="absolute top-0 left-0 w-full h-full"
-          src={`https://www.youtube.com/embed/${videoId}?autoplay=0&rel=0`} 
-          title="Rwanda Premier League Live Stream"
-          frameBorder="0"
-          allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
-        ></iframe>
-      </div>
-      
-      <p className="mt-4 text-gray-300 text-center italic">
-        Watch the Amavubi's resounding 4-0 victory from the FIFA Series 2026!
-      </p>
-    </div>
-  );
-}
+    <nav class="bg-blue-800 border-b-4 border-yellow-500 p-4 shadow-lg">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-2xl font-black tracking-tighter text-white">
+                REBA RWANDA <span class="text-yellow-400">PREMIER LEAGUE</span> <span class="bg-red-600 px-2 rounded animate-pulse">LIVE</span>
+            </h1>
+            <ul class="hidden md:flex space-x-6 font-bold">
+                <li><a href="#" class="hover:text-yellow-400">Home</a></li>
+                <li><a href="#" class="hover:text-yellow-400">Fixtures</a></li>
+                <li><a href="#" class="hover:text-yellow-400">Table</a></li>
+                <li><a href="#" class="hover:text-yellow-400">News</a></li>
+            </ul>
+        </div>
+    </nav>
 
-export default LiveStream;
+    <main class="container mx-auto mt-8 px-4">
+        
+        <section class="max-w-4xl mx-auto bg-slate-800 rounded-xl overflow-hidden shadow-2xl">
+            <div class="bg-slate-700 p-4 border-b border-slate-600 flex justify-between items-center">
+                <span class="text-sm font-bold uppercase tracking-widest text-yellow-500">Match Highlights</span>
+                <span class="text-xs bg-green-500 text-white px-2 py-1 rounded-full font-bold">HD QUALITY</span>
+            </div>
+
+            <div class="video-aspect-ratio border-b-4 border-blue-600">
+                <iframe 
+                    src="https://www.youtube.com/embed/xIHNb-KWiPw?autoplay=0&rel=0" 
+                    title="Rwanda vs Grenada Highlights" 
+                    frameborder="0" 
+                    allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen>
+                </iframe>
+            </div>
+
+            <div class="p-6">
+                <h2 class="text-2xl font-bold mb-2">Rwanda vs. Grenada | FIFA Series 2026 Highlights</h2>
+                <p class="text-slate-400 leading-relaxed">
+                    Watch the Amavubi's resounding 4-0 victory featuring goals from **Mickels**, **Kwizera**, **Bizimana**, and **Sahabo**. 
+                    Follow REBA RWANDA for more live updates on the Rwandan Premier League.
+                </p>
+            </div>
+        </section>
+
+        <section class="max-w-4xl mx-auto mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="bg-slate-800 p-4 rounded-lg border-l-4 border-yellow-500">
+                <h3 class="font-bold text-gray-400 uppercase text-xs mb-2">Next Featured Match</h3>
+                <div class="flex justify-between items-center">
+                    <span class="font-bold">APR FC</span>
+                    <span class="text-yellow-500 font-black">VS</span>
+                    <span class="font-bold">Rayon Sports</span>
+                </div>
+            </div>
+            <div class="bg-slate-800 p-4 rounded-lg border-l-4 border-blue-500">
+                <h3 class="font-bold text-gray-400 uppercase text-xs mb-2">League Status</h3>
+                <p class="text-sm font-medium">Season 2025/2026 - Matchday 24</p>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="mt-12 py-8 bg-slate-900 text-center text-slate-500 text-sm">
+        <p>&copy; 2026 REBA RWANDA PREMIER LEAGUE LIVE. All Rights Reserved.</p>
+        <p class="mt-2 italic">Building the home of Rwandan Football.</p>
+    </footer>
+
+</body>
+</html>
