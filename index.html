@@ -4,50 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>REBA RWANDA | Premier League Portal</title>
-    
     <link rel="icon" type="image/jpeg" href="https://rebarwandapl.vercel.app/icon.jpeg">
-
     <script src="https://cdn.tailwindcss.com"></script>
-
     <style>
-        :root { --accent-color: #eab308; } /* Default Yellow-500 */
+        :root { --accent-color: #eab308; }
         body { background-color: #0f172a; color: #f8fafc; scroll-behavior: smooth; }
-        
         .theme-accent-text { color: var(--accent-color); }
         .theme-accent-bg { background-color: var(--accent-color); }
         .theme-accent-border { border-color: var(--accent-color); }
-
-        .video-wrapper {
-            position: relative;
-            padding-bottom: 56.25%;
-            height: 0;
-            overflow: hidden;
-            background-color: #000;
-            border-radius: 1rem;
-        }
-        .video-wrapper iframe {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            border: none;
-        }
-        .custom-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
-        .custom-scroll::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
-        
-        .glass {
-            background: rgba(30, 41, 59, 0.7);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
+        .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; background-color: #000; border-radius: 1rem; }
+        .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+        .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        /* Smooth hiding for filtered items */
+        .hidden-item { display: none !important; }
     </style>
 </head>
 <body class="font-sans flex flex-col min-h-screen">
 
     <header id="mainHeader" class="bg-blue-900 border-b-4 border-yellow-500 sticky top-0 z-50 shadow-2xl transition-all duration-500">
         <div class="container mx-auto px-4 py-3 flex justify-between items-center">
-            
             <a href="index.html" class="flex items-center space-x-4">
-                <img src="https://rebarwandapl.vercel.app/icon.jpeg" 
-                     alt="Logo" class="h-12 w-12 rounded-full border-2 border-yellow-400 object-cover theme-accent-border">
+                <img src="https://rebarwandapl.vercel.app/icon.jpeg" alt="Logo" class="h-12 w-12 rounded-full border-2 border-yellow-400 object-cover theme-accent-border">
                 <div>
                     <h1 class="text-xl font-black text-white italic leading-none tracking-tighter">REBA RWANDA</h1>
                     <span class="text-[10px] font-bold text-yellow-400 uppercase tracking-widest theme-accent-text">Premier League</span>
@@ -56,7 +33,7 @@
 
             <div class="hidden md:flex flex-1 max-w-xl mx-8">
                 <div class="relative w-full">
-                    <input type="text" id="siteSearch" onkeyup="searchFunction()" placeholder="Search menu items..." 
+                    <input type="text" id="siteSearch" onkeyup="globalSearch()" placeholder="Search videos, matches, or menu..." 
                            class="w-full bg-slate-800/50 border border-slate-700 rounded-full py-2 px-12 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-500 transition-all">
                     <svg class="w-5 h-5 absolute left-4 top-2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
@@ -69,119 +46,90 @@
                     <p class="text-[9px] uppercase text-blue-300 font-bold">System Dev</p>
                     <p id="displayUserName" class="text-white font-black text-sm uppercase">Nestor</p>
                 </div>
-                <div id="userInitials" class="h-10 w-10 bg-yellow-500 rounded-full flex items-center justify-center text-blue-900 font-bold theme-accent-bg">
-                    N
-                </div>
+                <div id="userInitials" class="h-10 w-10 bg-yellow-500 rounded-full flex items-center justify-center text-blue-900 font-bold theme-accent-bg">N</div>
             </div>
         </div>
     </header>
 
     <div class="flex flex-1 container mx-auto">
-        
         <aside class="hidden lg:block w-64 p-6 border-r border-slate-800 space-y-8">
-            <div id="navContainer">
-                <h3 class="text-slate-500 text-[11px] font-bold uppercase tracking-widest mb-4">Main Menu</h3>
-                <nav class="space-y-2" id="mainNav">
-                    <a href="index.html" class="nav-item flex items-center space-x-3 p-3 bg-yellow-500 text-black rounded-xl font-bold theme-accent-bg">
-                        <span>🏠</span> <span>Home</span>
-                    </a>
-                    <a href="livefeed.html" class="nav-item flex items-center space-x-3 p-3 hover:bg-slate-800 rounded-xl transition-all">
-                        <span>🔴</span> <span>Live Feed</span>
-                    </a>
-                    <a href="highlights.html" class="nav-item flex items-center space-x-3 p-3 hover:bg-slate-800 rounded-xl transition-all">
-                        <span>🏆</span> <span>Highlights</span>
-                    </a>
-                    <a href="trainings.html" class="nav-item flex items-center space-x-3 p-3 hover:bg-slate-800 rounded-xl transition-all">
-                        <span>⚽</span> <span>Trainings</span>
-                    </a>
-                    <a href="shorts.html" class="nav-item flex items-center space-x-3 p-3 hover:bg-slate-800 rounded-xl transition-all">
-                        <span>📱</span> <span>Shorts</span>
-                    </a>
-                    <a href="settings.html" class="nav-item flex items-center space-x-3 p-3 hover:bg-slate-800 rounded-xl transition-all text-sm">
-                        <span>⚙️</span> <span>Settings</span>
-                    </a>
-                </nav>
-            </div>
+            <h3 class="text-slate-500 text-[11px] font-bold uppercase tracking-widest mb-4">Main Menu</h3>
+            <nav class="space-y-2">
+                <a href="index.html" class="searchable-item flex items-center space-x-3 p-3 bg-yellow-500 text-black rounded-xl font-bold theme-accent-bg"><span>🏠</span> <span>Home</span></a>
+                <a href="livefeed.html" class="searchable-item flex items-center space-x-3 p-3 hover:bg-slate-800 rounded-xl transition-all"><span>🔴</span> <span>Live Feed</span></a>
+                <a href="highlights.html" class="searchable-item flex items-center space-x-3 p-3 hover:bg-slate-800 rounded-xl transition-all"><span>🏆</span> <span>Highlights</span></a>
+                <a href="trainings.html" class="searchable-item flex items-center space-x-3 p-3 hover:bg-slate-800 rounded-xl transition-all"><span>⚽</span> <span>Trainings</span></a>
+                <a href="shorts.html" class="searchable-item flex items-center space-x-3 p-3 hover:bg-slate-800 rounded-xl transition-all"><span>📱</span> <span>Shorts</span></a>
+                <a href="settings.html" class="searchable-item flex items-center space-x-3 p-3 hover:bg-slate-800 rounded-xl transition-all"><span>⚙️</span> <span>Settings</span></a>
+            </nav>
         </aside>
 
         <main class="flex-1 p-4 lg:p-8">
-            <div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
-                
-                <div class="xl:col-span-2 space-y-6">
-                    <div class="glass p-2 rounded-3xl shadow-2xl">
-                        <div class="video-wrapper">
-                            <iframe id="heroVideo" src="https://www.youtube.com/embed/0aLT0H4bD_g?rel=0" allowfullscreen></iframe>
-                        </div>
+            <h2 id="resultsHeader" class="text-2xl font-black mb-6 uppercase italic">Featured Content</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                <div class="searchable-item glass p-3 rounded-2xl border border-slate-700 hover:border-yellow-500 transition-all">
+                    <div class="video-wrapper mb-3">
+                        <iframe src="https://www.youtube.com/embed/0aLT0H4bD_g" allowfullscreen></iframe>
                     </div>
-                    
-                    <div class="px-2">
-                        <h2 class="text-3xl font-black italic uppercase tracking-tighter">Main Portal Hub</h2>
-                        <p class="text-slate-400 mt-2">Welcome back, <span class="theme-accent-text font-bold" id="welcomeName">Nestor</span>. Managing the 2026 Season.</p>
-                    </div>
+                    <h4 class="font-bold text-sm">Indigo White Live Broadcast</h4>
+                    <p class="text-[10px] text-slate-500 uppercase font-black">Category: Live Feed</p>
                 </div>
 
-                <div class="space-y-4">
-                    <div class="glass rounded-3xl p-6 border border-slate-700">
-                        <h3 class="theme-accent-text font-black text-xs uppercase mb-4 tracking-widest">Quick Navigation</h3>
-                        <div class="grid grid-cols-2 gap-3">
-                            <a href="livefeed.html" class="bg-slate-800 p-4 rounded-2xl text-center hover:bg-red-600 transition-all">
-                                <span class="block text-2xl mb-1">🔴</span>
-                                <span class="text-[10px] font-bold uppercase">Live</span>
-                            </a>
-                            <a href="settings.html" class="bg-slate-800 p-4 rounded-2xl text-center hover:bg-blue-600 transition-all">
-                                <span class="block text-2xl mb-1">⚙️</span>
-                                <span class="text-[10px] font-bold uppercase">Config</span>
-                            </a>
-                        </div>
+                <div class="searchable-item glass p-3 rounded-2xl border border-slate-700 hover:border-yellow-500 transition-all">
+                    <div class="video-wrapper mb-3">
+                        <iframe src="https://www.youtube.com/embed/5wMLb1BB2SI" allowfullscreen></iframe>
                     </div>
+                    <h4 class="font-bold text-sm">Cracker Match Highlights</h4>
+                    <p class="text-[10px] text-slate-500 uppercase font-black">Category: Highlights</p>
                 </div>
 
+                <div class="searchable-item glass p-3 rounded-2xl border border-slate-700 hover:border-yellow-500 transition-all">
+                    <div class="video-wrapper mb-3">
+                        <iframe src="https://www.youtube.com/embed/xIHNb-KWiPw" allowfullscreen></iframe>
+                    </div>
+                    <h4 class="font-bold text-sm">Rwanda vs Grenada Recap</h4>
+                    <p class="text-[10px] text-slate-500 uppercase font-black">Category: Match Recap</p>
+                </div>
             </div>
         </main>
     </div>
 
-    <footer class="bg-slate-900 border-t border-slate-800 py-8">
-        <div class="container mx-auto px-4 text-center">
-            <p class="text-slate-500 text-xs">© 2026 REBA RWANDA PL • Designed by Nestor</p>
-        </div>
-    </footer>
-
     <script>
-        // 1. SETTINGS SYNC (LocalStorage)
+        // 1. GLOBAL SEARCH LOGIC (Filters everything with class 'searchable-item')
+        function globalSearch() {
+            const input = document.getElementById('siteSearch').value.toLowerCase();
+            const items = document.getElementsByClassName('searchable-item');
+            const header = document.getElementById('resultsHeader');
+            let foundCount = 0;
+
+            for (let i = 0; i < items.length; i++) {
+                const text = items[i].innerText.toLowerCase();
+                if (text.includes(input)) {
+                    items[i].classList.remove('hidden-item');
+                    foundCount++;
+                } else {
+                    items[i].classList.add('hidden-item');
+                }
+            }
+
+            // Update header if searching
+            header.innerText = input.length > 0 ? `Search Results (${foundCount})` : "Featured Content";
+        }
+
+        // 2. SETTINGS SYNC
         function applySettings() {
             const savedName = localStorage.getItem('userName') || 'Nestor';
-            const savedColor = localStorage.getItem('themeColor') || '#eab308'; // Default yellow
-
-            // Update Names
+            const savedColor = localStorage.getItem('themeColor') || '#eab308';
             document.getElementById('displayUserName').innerText = savedName;
-            document.getElementById('welcomeName').innerText = savedName;
             document.getElementById('userInitials').innerText = savedName.charAt(0).toUpperCase();
-
-            // Update Colors
             document.getElementById('mainHeader').style.borderColor = savedColor;
             document.querySelectorAll('.theme-accent-bg').forEach(el => el.style.backgroundColor = savedColor);
             document.querySelectorAll('.theme-accent-text').forEach(el => el.style.color = savedColor);
             document.querySelectorAll('.theme-accent-border').forEach(el => el.style.borderColor = savedColor);
         }
 
-        // 2. SEARCH LOGIC
-        function searchFunction() {
-            let input = document.getElementById('siteSearch').value.toLowerCase();
-            let navItems = document.getElementsByClassName('nav-item');
-
-            for (let i = 0; i < navItems.length; i++) {
-                let text = navItems[i].textContent.toLowerCase();
-                if (text.includes(input)) {
-                    navItems[i].style.display = "flex";
-                } else {
-                    navItems[i].style.display = "none";
-                }
-            }
-        }
-
-        // Run on load
         window.onload = applySettings;
     </script>
-
 </body>
 </html>
