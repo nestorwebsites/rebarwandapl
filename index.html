@@ -8,128 +8,146 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root { --accent-color: #eab308; }
-        body { background-color: #0f172a; color: #f8fafc; scroll-behavior: smooth; }
+        body { background-color: #0f172a; color: #f8fafc; overflow-x: hidden; }
+        
+        /* Video Container Styles */
+        .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; background-color: #000; border-radius: 0.75rem; pointer-events: none; }
+        .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+        
+        /* Overlay / Big View Logic */
+        #videoOverlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+        }
+        .expanded-video-container {
+            width: 100%;
+            max-width: 1100px;
+            aspect-ratio: 16/9;
+            background: #000;
+            box-shadow: 0 0 50px rgba(0,0,0,0.5);
+            border-radius: 1.5rem;
+            overflow: hidden;
+            border: 2px solid var(--accent-color);
+        }
+
+        .searchable-item { cursor: pointer; transition: all 0.3s ease; }
+        .searchable-item:hover { transform: translateY(-5px); }
+        .hidden-item { display: none !important; }
+        
         .theme-accent-text { color: var(--accent-color); }
         .theme-accent-bg { background-color: var(--accent-color); }
         .theme-accent-border { border-color: var(--accent-color); }
-        .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; background-color: #000; border-radius: 1rem; }
-        .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
-        .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
-        /* Smooth hiding for filtered items */
-        .hidden-item { display: none !important; }
     </style>
 </head>
 <body class="font-sans flex flex-col min-h-screen">
 
-    <header id="mainHeader" class="bg-blue-900 border-b-4 border-yellow-500 sticky top-0 z-50 shadow-2xl transition-all duration-500">
+    <div id="videoOverlay" onclick="closeVideo()">
+        <button class="absolute top-10 right-10 text-white text-4xl font-black">&times;</button>
+        <div class="expanded-video-container" onclick="event.stopPropagation()">
+            <iframe id="expandedIframe" src="" class="w-full h-full" allow="autoplay; fullscreen" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <header id="mainHeader" class="bg-blue-900 border-b-4 border-yellow-500 sticky top-0 z-50 shadow-2xl">
         <div class="container mx-auto px-4 py-3 flex justify-between items-center">
             <a href="index.html" class="flex items-center space-x-4">
                 <img src="https://rebarwandapl.vercel.app/icon.jpeg" alt="Logo" class="h-12 w-12 rounded-full border-2 border-yellow-400 object-cover theme-accent-border">
-                <div>
-                    <h1 class="text-xl font-black text-white italic leading-none tracking-tighter">REBA RWANDA</h1>
-                    <span class="text-[10px] font-bold text-yellow-400 uppercase tracking-widest theme-accent-text">Premier League</span>
-                </div>
+                <h1 class="text-xl font-black text-white italic">REBA RWANDA</h1>
             </a>
 
             <div class="hidden md:flex flex-1 max-w-xl mx-8">
-                <div class="relative w-full">
-                    <input type="text" id="siteSearch" onkeyup="globalSearch()" placeholder="Search videos, matches, or menu..." 
-                           class="w-full bg-slate-800/50 border border-slate-700 rounded-full py-2 px-12 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-500 transition-all">
-                    <svg class="w-5 h-5 absolute left-4 top-2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                    </svg>
-                </div>
+                <input type="text" id="siteSearch" onkeyup="globalSearch()" placeholder="Search videos or menu..." 
+                       class="w-full bg-slate-800/50 border border-slate-700 rounded-full py-2 px-12 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-500">
             </div>
 
-            <div class="flex items-center space-x-4">
-                <div class="text-right">
-                    <p class="text-[9px] uppercase text-blue-300 font-bold">System Dev</p>
-                    <p id="displayUserName" class="text-white font-black text-sm uppercase">Nestor</p>
-                </div>
+            <div class="flex items-center space-x-4 text-right">
+                <p id="displayUserName" class="text-white font-black text-sm uppercase">Nestor</p>
                 <div id="userInitials" class="h-10 w-10 bg-yellow-500 rounded-full flex items-center justify-center text-blue-900 font-bold theme-accent-bg">N</div>
             </div>
         </div>
     </header>
 
     <div class="flex flex-1 container mx-auto">
-        <aside class="hidden lg:block w-64 p-6 border-r border-slate-800 space-y-8">
-            <h3 class="text-slate-500 text-[11px] font-bold uppercase tracking-widest mb-4">Main Menu</h3>
+        <aside class="hidden lg:block w-64 p-6 border-r border-slate-800 space-y-4">
             <nav class="space-y-2">
                 <a href="index.html" class="searchable-item flex items-center space-x-3 p-3 bg-yellow-500 text-black rounded-xl font-bold theme-accent-bg"><span>🏠</span> <span>Home</span></a>
-                <a href="livefeed.html" class="searchable-item flex items-center space-x-3 p-3 hover:bg-slate-800 rounded-xl transition-all"><span>🔴</span> <span>Live Feed</span></a>
-                <a href="highlights.html" class="searchable-item flex items-center space-x-3 p-3 hover:bg-slate-800 rounded-xl transition-all"><span>🏆</span> <span>Highlights</span></a>
-                <a href="trainings.html" class="searchable-item flex items-center space-x-3 p-3 hover:bg-slate-800 rounded-xl transition-all"><span>⚽</span> <span>Trainings</span></a>
-                <a href="shorts.html" class="searchable-item flex items-center space-x-3 p-3 hover:bg-slate-800 rounded-xl transition-all"><span>📱</span> <span>Shorts</span></a>
-                <a href="settings.html" class="searchable-item flex items-center space-x-3 p-3 hover:bg-slate-800 rounded-xl transition-all"><span>⚙️</span> <span>Settings</span></a>
+                <a href="livefeed.html" class="searchable-item flex items-center space-x-3 p-3 hover:bg-slate-800 rounded-xl"><span>🔴</span> <span>Live Feed</span></a>
+                <a href="highlights.html" class="searchable-item flex items-center space-x-3 p-3 hover:bg-slate-800 rounded-xl"><span>🏆</span> <span>Highlights</span></a>
+                <a href="settings.html" class="searchable-item flex items-center space-x-3 p-3 hover:bg-slate-800 rounded-xl"><span>⚙️</span> <span>Settings</span></a>
             </nav>
         </aside>
 
-        <main class="flex-1 p-4 lg:p-8">
+        <main class="flex-1 p-8">
             <h2 id="resultsHeader" class="text-2xl font-black mb-6 uppercase italic">Featured Content</h2>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                <div class="searchable-item glass p-3 rounded-2xl border border-slate-700 hover:border-yellow-500 transition-all">
-                    <div class="video-wrapper mb-3">
-                        <iframe src="https://www.youtube.com/embed/0aLT0H4bD_g" allowfullscreen></iframe>
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+                <div class="searchable-item bg-slate-800/50 p-4 rounded-3xl border border-slate-700 hover:border-yellow-500" 
+                     onclick="openVideo('https://www.youtube.com/embed/0aLT0H4bD_g')">
+                    <div class="video-wrapper mb-4">
+                        <iframe src="https://www.youtube.com/embed/0aLT0H4bD_g"></iframe>
                     </div>
-                    <h4 class="font-bold text-sm">Indigo White Live Broadcast</h4>
-                    <p class="text-[10px] text-slate-500 uppercase font-black">Category: Live Feed</p>
+                    <h4 class="font-bold">Indigo White Live</h4>
+                    <p class="text-[10px] text-yellow-500 font-black uppercase theme-accent-text">Click to Expand</p>
                 </div>
 
-                <div class="searchable-item glass p-3 rounded-2xl border border-slate-700 hover:border-yellow-500 transition-all">
-                    <div class="video-wrapper mb-3">
-                        <iframe src="https://www.youtube.com/embed/5wMLb1BB2SI" allowfullscreen></iframe>
+                <div class="searchable-item bg-slate-800/50 p-4 rounded-3xl border border-slate-700 hover:border-yellow-500" 
+                     onclick="openVideo('https://www.youtube.com/embed/5wMLb1BB2SI')">
+                    <div class="video-wrapper mb-4">
+                        <iframe src="https://www.youtube.com/embed/5wMLb1BB2SI"></iframe>
                     </div>
-                    <h4 class="font-bold text-sm">Cracker Match Highlights</h4>
-                    <p class="text-[10px] text-slate-500 uppercase font-black">Category: Highlights</p>
-                </div>
-
-                <div class="searchable-item glass p-3 rounded-2xl border border-slate-700 hover:border-yellow-500 transition-all">
-                    <div class="video-wrapper mb-3">
-                        <iframe src="https://www.youtube.com/embed/xIHNb-KWiPw" allowfullscreen></iframe>
-                    </div>
-                    <h4 class="font-bold text-sm">Rwanda vs Grenada Recap</h4>
-                    <p class="text-[10px] text-slate-500 uppercase font-black">Category: Match Recap</p>
+                    <h4 class="font-bold">Match Highlights</h4>
+                    <p class="text-[10px] text-yellow-500 font-black uppercase theme-accent-text">Click to Expand</p>
                 </div>
             </div>
         </main>
     </div>
 
     <script>
-        // 1. GLOBAL SEARCH LOGIC (Filters everything with class 'searchable-item')
+        // 1. EXPAND VIDEO LOGIC
+        function openVideo(url) {
+            const overlay = document.getElementById('videoOverlay');
+            const iframe = document.getElementById('expandedIframe');
+            // Auto-add autoplay when expanding
+            iframe.src = url + "?autoplay=1&rel=0";
+            overlay.style.display = 'flex';
+            document.body.style.overflow = 'hidden'; // Stop scrolling background
+        }
+
+        function closeVideo() {
+            const overlay = document.getElementById('videoOverlay');
+            const iframe = document.getElementById('expandedIframe');
+            iframe.src = ""; // Stop video from playing in background
+            overlay.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        // 2. SEARCH LOGIC
         function globalSearch() {
             const input = document.getElementById('siteSearch').value.toLowerCase();
             const items = document.getElementsByClassName('searchable-item');
-            const header = document.getElementById('resultsHeader');
-            let foundCount = 0;
-
             for (let i = 0; i < items.length; i++) {
-                const text = items[i].innerText.toLowerCase();
-                if (text.includes(input)) {
-                    items[i].classList.remove('hidden-item');
-                    foundCount++;
-                } else {
-                    items[i].classList.add('hidden-item');
-                }
+                items[i].classList.toggle('hidden-item', !items[i].innerText.toLowerCase().includes(input));
             }
-
-            // Update header if searching
-            header.innerText = input.length > 0 ? `Search Results (${foundCount})` : "Featured Content";
         }
 
-        // 2. SETTINGS SYNC
-        function applySettings() {
-            const savedName = localStorage.getItem('userName') || 'Nestor';
-            const savedColor = localStorage.getItem('themeColor') || '#eab308';
-            document.getElementById('displayUserName').innerText = savedName;
-            document.getElementById('userInitials').innerText = savedName.charAt(0).toUpperCase();
-            document.getElementById('mainHeader').style.borderColor = savedColor;
-            document.querySelectorAll('.theme-accent-bg').forEach(el => el.style.backgroundColor = savedColor);
-            document.querySelectorAll('.theme-accent-text').forEach(el => el.style.color = savedColor);
-            document.querySelectorAll('.theme-accent-border').forEach(el => el.style.borderColor = savedColor);
-        }
-
-        window.onload = applySettings;
+        // 3. SETTINGS SYNC
+        window.onload = function() {
+            const name = localStorage.getItem('userName') || 'Nestor';
+            const color = localStorage.getItem('themeColor') || '#eab308';
+            document.getElementById('displayUserName').innerText = name;
+            document.getElementById('userInitials').innerText = name.charAt(0).toUpperCase();
+            document.getElementById('mainHeader').style.borderColor = color;
+            document.documentElement.style.setProperty('--accent-color', color);
+            document.querySelectorAll('.theme-accent-bg').forEach(el => el.style.backgroundColor = color);
+            document.querySelectorAll('.theme-accent-text').forEach(el => el.style.color = color);
+        };
     </script>
 </body>
 </html>
