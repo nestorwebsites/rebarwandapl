@@ -1,0 +1,32 @@
+import React from 'react';
+
+// LiveStream Component for REBA RWANDA
+function LiveStream() {
+  // Video ID from the Rwanda vs Grenada highlights
+  const videoId = "xIHNb-KWiPw"; 
+  
+  return (
+    <div className="flex flex-col items-center bg-gray-900 p-6 rounded-lg shadow-xl">
+      <h2 className="text-2xl font-bold text-yellow-500 mb-4">
+        LATEST HIGHLIGHTS: RWANDA VS GRENADA
+      </h2>
+      
+      <div className="relative w-full overflow-hidden pt-[56.25%] rounded-md border-4 border-blue-600">
+        <iframe
+          className="absolute top-0 left-0 w-full h-full"
+          src={`https://www.youtube.com/embed/${videoId}?autoplay=0&rel=0`} 
+          title="Rwanda Premier League Live Stream"
+          frameBorder="0"
+          allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+        ></iframe>
+      </div>
+      
+      <p className="mt-4 text-gray-300 text-center italic">
+        Watch the Amavubi's resounding 4-0 victory from the FIFA Series 2026!
+      </p>
+    </div>
+  );
+}
+
+export default LiveStream;
