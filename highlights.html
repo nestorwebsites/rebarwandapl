@@ -3,79 +3,167 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TRAININGS | REBA RWANDA</title>
+    <title>HIGHLIGHTS | REBA RWANDA</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root { --accent-color: #eab308; }
-        body { background-color: #0f172a; color: #f8fafc; }
-        .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 1.5rem; background: #000; }
-        .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; pointer-events: none; }
-        #videoOverlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 100; justify-content: center; align-items: center; }
-        .expanded-container { width: 90%; max-width: 1000px; aspect-ratio: 16/9; border: 2px solid var(--accent-color); border-radius: 2rem; overflow: hidden; }
+        body { background-color: #0f172a; color: #f8fafc; overflow-x: hidden; }
+        
+        /* Widescreen Video Aspect Ratio (16:9) */
+        .video-wrapper { 
+            position: relative; 
+            padding-bottom: 56.25%; 
+            height: 0; 
+            overflow: hidden; 
+            border-radius: 1.5rem; 
+            background: #000; 
+        }
+        .video-wrapper iframe { 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            border: none; 
+            pointer-events: none; 
+        }
+
+        /* Video Popup Overlay */
+        #videoOverlay { 
+            display: none; 
+            position: fixed; 
+            inset: 0; 
+            background: rgba(0,0,0,0.92); 
+            z-index: 100; 
+            justify-content: center; 
+            align-items: center; 
+            backdrop-filter: blur(12px); 
+        }
+        .expanded-video { 
+            width: 90%; 
+            max-width: 1000px; 
+            aspect-ratio: 16/9; 
+            border: 2px solid var(--accent-color); 
+            border-radius: 2rem; 
+            overflow: hidden; 
+            box-shadow: 0 0 50px rgba(0,0,0,0.8);
+        }
+
         .theme-accent-bg { background-color: var(--accent-color); }
+        .theme-accent-border { border-color: var(--accent-color); }
     </style>
 </head>
 <body class="flex flex-col min-h-screen">
+
     <div id="videoOverlay" onclick="closeVideo()">
-        <div class="expanded-container" onclick="event.stopPropagation()">
+        <button class="absolute top-8 right-8 text-white text-4xl font-light hover:text-yellow-500 transition-colors">&times;</button>
+        <div class="expanded-video" onclick="event.stopPropagation()">
             <iframe id="expandedIframe" class="w-full h-full" allow="autoplay; fullscreen" allowfullscreen></iframe>
         </div>
     </div>
 
-    <header id="mainHeader" class="bg-blue-900 border-b-4 border-yellow-500 p-4 sticky top-0 z-50">
+    <header id="mainHeader" class="bg-blue-900 border-b-4 border-yellow-500 sticky top-0 z-50 p-4">
         <div class="container mx-auto flex justify-between items-center">
-            <h1 class="text-xl font-black italic text-white uppercase">REBA RWANDA</h1>
-            <div id="userInitials" class="h-8 w-8 theme-accent-bg rounded-full flex items-center justify-center text-blue-900 font-bold">N</div>
+            <a href="index.html" class="flex items-center space-x-3">
+                <img src="https://rebarwandapl.vercel.app/icon.jpeg" class="h-10 w-10 rounded-full border-2 theme-accent-border">
+                <h1 class="text-xl font-black italic text-white uppercase tracking-tighter">Reba Rwanda</h1>
+            </a>
+            <div class="flex items-center space-x-3">
+                <p id="displayUserName" class="text-white font-black text-xs uppercase tracking-widest">Nestor</p>
+                <div id="userInitials" class="h-8 w-8 theme-accent-bg rounded-full flex items-center justify-center text-blue-900 font-bold">N</div>
+            </div>
         </div>
     </header>
 
     <div class="flex flex-1 container mx-auto">
         <aside class="w-64 p-6 border-r border-slate-800 space-y-2 hidden lg:block">
-            <a href="index.html" class="block p-3 hover:bg-slate-800 rounded-xl">🏠 Home</a>
-            <a href="livefeed.html" class="block p-3 hover:bg-slate-800 rounded-xl">🔴 Live Feed</a>
-            <a href="highlights.html" class="block p-3 hover:bg-slate-800 rounded-xl">🏆 Highlights</a>
-            <a href="trainings.html" class="block p-3 theme-accent-bg text-blue-900 font-bold rounded-xl">⚽ Trainings</a>
-            <a href="shorts.html" class="block p-3 hover:bg-slate-800 rounded-xl">📱 Shorts</a>
+            <nav class="sticky top-24 space-y-1">
+                <a href="index.html" class="block p-3 hover:bg-slate-800 rounded-xl transition-all font-medium">🏠 Home</a>
+                <a href="livefeed.html" class="block p-3 hover:bg-slate-800 rounded-xl transition-all font-medium">🔴 Live Feed</a>
+                <a href="highlights.html" class="block p-3 theme-accent-bg text-blue-900 font-bold rounded-xl shadow-lg">🏆 Highlights</a>
+                <a href="trainings.html" class="block p-3 hover:bg-slate-800 rounded-xl transition-all font-medium">⚽ Trainings</a>
+                <a href="shorts.html" class="block p-3 hover:bg-slate-800 rounded-xl transition-all font-medium">📱 Shorts</a>
+            </nav>
         </aside>
 
         <main class="flex-1 p-8">
-            <h2 class="text-2xl font-black mb-8 uppercase italic tracking-tighter">Football Training Sessions</h2>
-            <div id="videoGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+            <header class="mb-10">
+                <h2 class="text-3xl font-black uppercase italic tracking-tighter">Match <span class="text-yellow-500">Highlights</span></h2>
+                <p class="text-slate-500 text-xs font-bold uppercase tracking-widest mt-1">Rewatch the best moments from Rwanda Premier League</p>
+            </header>
+
+            <div id="videoGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="col-span-full py-20 text-center opacity-20">
+                    <p class="italic">Fetching highlights from the cloud...</p>
+                </div>
+            </div>
         </main>
     </div>
 
     <script>
-        const _supabase = supabase.createClient('https://cukkytzxcrgyiyciisle.supabase.co', 'sb_publishable_z9QuZbH-vdV6CATzC7vLLQ_GlafP1yd');
-        
-        async function fetchTrainings() {
-            const { data: videos } = await _supabase.from('site_videos').select('*').eq('category', 'trainings').order('created_at', { ascending: false });
+        // Supabase Initialization
+        const supabaseUrl = 'https://cukkytzxcrgyiyciisle.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN1a2t5dHp4Y3JneWl5Y2lpc2xlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU5OTU1OTgsImV4cCI6MjA5MTU3MTU5OH0.5xT_ul_eHMHbbRNQKSAcHoTF2zLMrqgc1GXHYOZhD1c';
+        const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+        async function fetchVideos() {
+            const { data: videos, error } = await _supabase
+                .from('site_videos')
+                .select('*')
+                .eq('category', 'highlights') // Filter specifically for Highlights
+                .order('created_at', { ascending: false });
+
             const grid = document.getElementById('videoGrid');
-            if(videos) {
+
+            if (error) {
+                grid.innerHTML = `<p class="text-red-500 text-center col-span-full">Error connecting to database.</p>`;
+                return;
+            }
+
+            if (videos && videos.length > 0) {
                 grid.innerHTML = videos.map(v => `
-                    <div class="bg-slate-800/50 p-4 rounded-3xl border border-slate-700 cursor-pointer hover:border-yellow-500 transition-all" onclick="openVideo('${v.url}')">
-                        <div class="video-wrapper mb-4"><iframe src="${v.url}"></iframe></div>
-                        <h4 class="font-bold text-sm text-yellow-500 uppercase italic mb-1">Drill Session</h4>
-                        <h4 class="font-bold text-sm">${v.title}</h4>
+                    <div class="bg-slate-800/40 p-4 rounded-[2rem] border border-slate-700 cursor-pointer hover:border-yellow-500 transition-all hover:scale-[1.02] group" onclick="openVideo('${v.url}')">
+                        <div class="video-wrapper mb-4 border border-slate-700">
+                            <iframe src="${v.url}"></iframe>
+                        </div>
+                        <div class="px-2">
+                            <h4 class="font-bold text-sm leading-tight group-hover:text-yellow-500 transition-colors">${v.title}</h4>
+                            <p class="text-[9px] text-slate-500 uppercase font-black mt-2 tracking-widest">Widescreen HD</p>
+                        </div>
                     </div>
                 `).join('');
+            } else {
+                grid.innerHTML = `<p class="text-slate-600 italic col-span-full text-center py-20">No highlights uploaded yet.</p>`;
             }
         }
 
         function openVideo(url) {
-            document.getElementById('expandedIframe').src = url + "?autoplay=1";
+            document.getElementById('expandedIframe').src = url + "?autoplay=1&rel=0";
             document.getElementById('videoOverlay').style.display = 'flex';
+            document.body.style.overflow = 'hidden'; // Stop background scrolling
         }
+
         function closeVideo() {
             document.getElementById('expandedIframe').src = "";
             document.getElementById('videoOverlay').style.display = 'none';
+            document.body.style.overflow = 'auto'; // Re-enable scrolling
         }
 
         window.onload = function() {
-            fetchTrainings();
+            fetchVideos();
+
+            // Profile & Theme Sync
+            const name = localStorage.getItem('userName') || 'Nestor';
             const color = localStorage.getItem('themeColor') || '#eab308';
+            
+            document.getElementById('displayUserName').innerText = name;
+            document.getElementById('userInitials').innerText = name.charAt(0).toUpperCase();
             document.documentElement.style.setProperty('--accent-color', color);
             document.getElementById('mainHeader').style.borderColor = color;
+            
+            document.querySelectorAll('.theme-accent-bg').forEach(el => el.style.backgroundColor = color);
+            document.querySelectorAll('.theme-accent-border').forEach(el => el.style.borderColor = color);
         };
     </script>
 </body>
