@@ -9,18 +9,67 @@
     <style>
         :root { --accent-color: #eab308; }
         body { background-color: #0f172a; color: #f8fafc; overflow-x: hidden; }
-        .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 1.5rem; background: #000; }
-        .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; pointer-events: none; }
-        #videoOverlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 100; justify-content: center; align-items: center; backdrop-filter: blur(8px); }
-        .expanded-container { width: 90%; max-width: 1000px; aspect-ratio: 16/9; border: 2px solid var(--accent-color); border-radius: 2rem; overflow: hidden; }
+        
+        /* 16:9 Aspect Ratio for Match Streams */
+        .video-wrapper { 
+            position: relative; 
+            padding-bottom: 56.25%; 
+            height: 0; 
+            overflow: hidden; 
+            border-radius: 1.5rem; 
+            background: #000; 
+        }
+        .video-wrapper iframe { 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            border: none; 
+            pointer-events: none; 
+        }
+
+        /* Video Popup Overlay */
+        #videoOverlay { 
+            display: none; 
+            position: fixed; 
+            inset: 0; 
+            background: rgba(0,0,0,0.95); 
+            z-index: 100; 
+            justify-content: center; 
+            align-items: center; 
+            backdrop-filter: blur(15px); 
+        }
+        .expanded-video { 
+            width: 95%; 
+            max-width: 1100px; 
+            aspect-ratio: 16/9; 
+            border: 2px solid var(--accent-color); 
+            border-radius: 2rem; 
+            overflow: hidden; 
+            box-shadow: 0 0 60px rgba(0,0,0,0.9);
+        }
+
         .theme-accent-bg { background-color: var(--accent-color); }
         .theme-accent-border { border-color: var(--accent-color); }
+        
+        /* Pulse Animation for Live Status */
+        .pulse-red {
+            box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.7);
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(220, 38, 38, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0); }
+        }
     </style>
 </head>
 <body class="flex flex-col min-h-screen">
+
     <div id="videoOverlay" onclick="closeVideo()">
-        <button class="absolute top-8 right-8 text-white text-3xl font-bold">&times;</button>
-        <div class="expanded-container" onclick="event.stopPropagation()">
+        <button class="absolute top-8 right-8 text-white text-5xl font-thin hover:text-yellow-500 transition-colors">&times;</button>
+        <div class="expanded-video" onclick="event.stopPropagation()">
             <iframe id="expandedIframe" class="w-full h-full" allow="autoplay; fullscreen" allowfullscreen></iframe>
         </div>
     </div>
@@ -29,10 +78,10 @@
         <div class="container mx-auto flex justify-between items-center">
             <a href="index.html" class="flex items-center space-x-3">
                 <img src="https://rebarwandapl.vercel.app/icon.jpeg" class="h-10 w-10 rounded-full border-2 theme-accent-border">
-                <h1 class="text-xl font-black italic text-white">REBA RWANDA</h1>
+                <h1 class="text-xl font-black italic text-white uppercase tracking-tighter">Reba Rwanda</h1>
             </a>
             <div class="flex items-center space-x-3">
-                <p id="displayUserName" class="text-white font-black text-xs uppercase">Nestor</p>
+                <p id="displayUserName" class="text-white font-black text-xs uppercase tracking-widest">Nestor</p>
                 <div id="userInitials" class="h-8 w-8 theme-accent-bg rounded-full flex items-center justify-center text-blue-900 font-bold">N</div>
             </div>
         </div>
@@ -40,63 +89,105 @@
 
     <div class="flex flex-1 container mx-auto">
         <aside class="w-64 p-6 border-r border-slate-800 space-y-2 hidden lg:block">
-            <a href="index.html" class="block p-3 hover:bg-slate-800 rounded-xl transition-all">🏠 Home</a>
-            <a href="livefeed.html" class="block p-3 theme-accent-bg text-blue-900 font-bold rounded-xl">🔴 Live Feed</a>
-            <a href="highlights.html" class="block p-3 hover:bg-slate-800 rounded-xl">🏆 Highlights</a>
-            <a href="trainings.html" class="block p-3 hover:bg-slate-800 rounded-xl">⚽ Trainings</a>
-            <a href="shorts.html" class="block p-3 hover:bg-slate-800 rounded-xl">📱 Shorts</a>
-            <a href="settings.html" class="block p-3 hover:bg-slate-800 rounded-xl">⚙️ Settings</a>
+            <nav class="sticky top-24 space-y-1">
+                <a href="index.html" class="block p-3 hover:bg-slate-800 rounded-xl transition-all font-medium">🏠 Home</a>
+                <a href="livefeed.html" class="block p-3 theme-accent-bg text-blue-900 font-bold rounded-xl shadow-lg">🔴 Live Feed</a>
+                <a href="highlights.html" class="block p-3 hover:bg-slate-800 rounded-xl transition-all font-medium">🏆 Highlights</a>
+                <a href="trainings.html" class="block p-3 hover:bg-slate-800 rounded-xl transition-all font-medium">⚽ Trainings</a>
+                <a href="shorts.html" class="block p-3 hover:bg-slate-800 rounded-xl transition-all font-medium">📱 Shorts</a>
+            </nav>
         </aside>
 
         <main class="flex-1 p-8">
-            <div class="flex items-center space-x-3 mb-8">
-                <div class="h-3 w-3 bg-red-600 rounded-full animate-pulse"></div>
-                <h2 class="text-2xl font-black uppercase italic tracking-tighter">Live Matches</h2>
-            </div>
-            <div id="videoGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <header class="mb-10 flex justify-between items-end">
+                <div>
+                    <h2 class="text-3xl font-black uppercase italic tracking-tighter">Live <span class="text-red-500">Broadcasting</span></h2>
+                    <p class="text-slate-500 text-xs font-black uppercase tracking-widest mt-1">Real-time match updates from the field</p>
                 </div>
+                <div class="flex items-center space-x-2 bg-slate-800 px-4 py-2 rounded-full">
+                    <div class="h-2 w-2 bg-red-600 rounded-full pulse-red"></div>
+                    <span class="text-[10px] font-black uppercase tracking-tighter text-slate-300">Live Status: Active</span>
+                </div>
+            </header>
+
+            <div id="videoGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="col-span-full py-20 text-center opacity-20">
+                    <p class="italic tracking-widest uppercase text-xs font-black">Syncing live data streams...</p>
+                </div>
+            </div>
         </main>
     </div>
 
     <script>
-        const _supabase = supabase.createClient('https://cukkytzxcrgyiyciisle.supabase.co', 'sb_publishable_z9QuZbH-vdV6CATzC7vLLQ_GlafP1yd');
-        
+        // Supabase Initialization
+        const supabaseUrl = 'https://cukkytzxcrgyiyciisle.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN1a2t5dHp4Y3JneWl5Y2lpc2xlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU5OTU1OTgsImV4cCI6MjA5MTU3MTU5OH0.5xT_ul_eHMHbbRNQKSAcHoTF2zLMrqgc1GXHYOZhD1c';
+        const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
         async function fetchLiveVideos() {
-            const { data: videos } = await _supabase.from('site_videos').select('*').eq('category', 'livefeed').order('created_at', { ascending: false });
+            const { data: videos, error } = await _supabase
+                .from('site_videos')
+                .select('*')
+                .eq('category', 'livefeed') // Filter for Live Feed
+                .order('created_at', { ascending: false });
+
             const grid = document.getElementById('videoGrid');
-            if(videos && videos.length > 0) {
+
+            if (error) {
+                grid.innerHTML = `<p class="text-red-500 text-center col-span-full">Cloud connection error.</p>`;
+                return;
+            }
+
+            if (videos && videos.length > 0) {
                 grid.innerHTML = videos.map(v => `
-                    <div class="bg-slate-800/50 p-4 rounded-3xl border border-slate-700 cursor-pointer hover:border-yellow-500 transition-all group" onclick="openVideo('${v.url}')">
-                        <div class="video-wrapper mb-4"><iframe src="${v.url}"></iframe></div>
-                        <h4 class="font-bold text-sm group-hover:text-yellow-500 transition-colors">${v.title}</h4>
-                        <p class="text-[10px] text-red-500 font-black uppercase mt-1">Live Now</p>
+                    <div class="bg-slate-800/40 p-4 rounded-[2rem] border border-slate-700 cursor-pointer hover:border-red-500 transition-all hover:scale-[1.02] group" onclick="openVideo('${v.url}')">
+                        <div class="video-wrapper mb-4 border border-slate-800 relative">
+                            <div class="absolute top-3 left-3 z-10 bg-red-600 text-white text-[8px] font-black px-2 py-0.5 rounded-md uppercase tracking-widest flex items-center gap-1 shadow-lg">
+                                <span class="h-1.5 w-1.5 bg-white rounded-full animate-pulse"></span> Live
+                            </div>
+                            <iframe src="${v.url}"></iframe>
+                        </div>
+                        <div class="px-2">
+                            <h4 class="font-bold text-sm leading-tight group-hover:text-red-500 transition-colors uppercase tracking-tighter">${v.title}</h4>
+                            <p class="text-[9px] text-slate-500 uppercase font-black mt-2 tracking-widest italic">Broadcasting Now</p>
+                        </div>
                     </div>
                 `).join('');
             } else {
-                grid.innerHTML = `<p class="text-slate-500 italic col-span-full text-center py-10">No live streams available at the moment.</p>`;
+                grid.innerHTML = `
+                    <div class="col-span-full py-20 text-center bg-slate-900/30 rounded-[3rem] border border-dashed border-slate-800">
+                        <p class="text-slate-600 font-black uppercase text-xs tracking-widest">No Active Streams Found</p>
+                    </div>
+                `;
             }
         }
 
         function openVideo(url) {
             document.getElementById('expandedIframe').src = url + "?autoplay=1&rel=0";
             document.getElementById('videoOverlay').style.display = 'flex';
-            document.body.style.overflow = 'hidden';
+            document.body.style.overflow = 'hidden'; 
         }
 
         function closeVideo() {
             document.getElementById('expandedIframe').src = "";
             document.getElementById('videoOverlay').style.display = 'none';
-            document.body.style.overflow = 'auto';
+            document.body.style.overflow = 'auto'; 
         }
 
         window.onload = function() {
             fetchLiveVideos();
+
+            // Profile & Theme Sync
             const name = localStorage.getItem('userName') || 'Nestor';
             const color = localStorage.getItem('themeColor') || '#eab308';
+            
             document.getElementById('displayUserName').innerText = name;
             document.getElementById('userInitials').innerText = name.charAt(0).toUpperCase();
             document.documentElement.style.setProperty('--accent-color', color);
             document.getElementById('mainHeader').style.borderColor = color;
+            
+            document.querySelectorAll('.theme-accent-bg').forEach(el => el.style.backgroundColor = color);
+            document.querySelectorAll('.theme-accent-border').forEach(el => el.style.borderColor = color);
         };
     </script>
 </body>
