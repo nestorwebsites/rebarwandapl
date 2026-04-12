@@ -9,56 +9,133 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root { --accent-color: #eab308; }
-        body { background-color: #0f172a; color: #f8fafc; }
+        body { background-color: #0f172a; color: #f8fafc; overflow-x: hidden; }
         .theme-accent-bg { background-color: var(--accent-color); }
-        .theme-accent-text { color: var(--accent-color); }
         .theme-accent-border { border-color: var(--accent-color); }
+        .sidebar-link:hover { background-color: rgba(30, 41, 59, 0.5); }
+        .glass-card { background: rgba(30, 41, 59, 0.4); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.05); }
     </style>
 </head>
 <body class="font-sans flex flex-col min-h-screen">
-    <header id="mainHeader" class="bg-blue-900 border-b-4 border-yellow-500 sticky top-0 z-50">
+
+    <header id="mainHeader" class="bg-blue-900 border-b-4 theme-accent-border sticky top-0 z-50">
         <div class="container mx-auto px-4 py-3 flex justify-between items-center">
-            <a href="index.html" class="flex items-center space-x-3">
-                <img src="https://rebarwandapl.vercel.app/icon.jpeg" class="h-10 w-10 rounded-full border-2 theme-accent-border">
-                <h1 class="text-lg font-black text-white italic">REBA RWANDA</h1>
+            <a href="index.html" class="flex items-center space-x-3 group">
+                <img src="https://rebarwandapl.vercel.app/icon.jpeg" class="h-10 w-10 rounded-full border-2 theme-accent-border group-hover:scale-110 transition-transform">
+                <h1 class="text-xl font-black text-white italic tracking-tighter">REBA RWANDA</h1>
             </a>
             <div class="flex items-center space-x-4">
-                <p id="displayUserName" class="text-white font-black text-xs uppercase">Nestor</p>
-                <div id="userInitials" class="h-8 w-8 theme-accent-bg rounded-full flex items-center justify-center text-blue-900 font-bold">N</div>
+                <div class="text-right hidden sm:block">
+                    <p id="displayUserName" class="text-white font-black text-xs uppercase tracking-widest">Nestor</p>
+                    <p class="text-[10px] text-slate-400 font-bold uppercase">Member</p>
+                </div>
+                <div id="userInitials" class="h-10 w-10 theme-accent-bg rounded-full flex items-center justify-center text-blue-900 font-black text-lg shadow-lg">N</div>
             </div>
         </div>
     </header>
 
     <div class="flex flex-1 container mx-auto">
-        <aside class="w-64 p-6 border-r border-slate-800 space-y-4 hidden lg:block">
-            <nav class="space-y-1">
-                <a href="index.html" class="flex items-center space-x-3 p-3 theme-accent-bg text-black rounded-xl font-bold"><span>🏠</span> <span>Home</span></a>
-                <a href="livefeed.html" class="flex items-center space-x-3 p-3 hover:bg-slate-800 rounded-xl transition-all"><span>🔴</span> <span>Live Feed</span></a>
-                <a href="highlights.html" class="flex items-center space-x-3 p-3 hover:bg-slate-800 rounded-xl transition-all"><span>🏆</span> <span>Highlights</span></a>
-                <a href="trainings.html" class="flex items-center space-x-3 p-3 hover:bg-slate-800 rounded-xl transition-all"><span>⚽</span> <span>Trainings</span></a>
-                <a href="shorts.html" class="flex items-center space-x-3 p-3 hover:bg-slate-800 rounded-xl transition-all"><span>📱</span> <span>Shorts</span></a>
-                <a href="settings.html" class="flex items-center space-x-3 p-3 hover:bg-slate-800 rounded-xl transition-all"><span>⚙️</span> <span>Settings</span></a>
-            </nav>
+        <aside class="w-64 p-6 border-r border-slate-800 space-y-6 hidden lg:block">
+            <div class="space-y-2">
+                <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest px-3">Main Menu</p>
+                <nav class="space-y-1">
+                    <a href="index.html" class="flex items-center space-x-3 p-3 theme-accent-bg text-blue-900 rounded-2xl font-black shadow-lg">
+                        <span>🏠</span> <span>Home</span>
+                    </a>
+                    <a href="livefeed.html" class="flex items-center space-x-3 p-3 sidebar-link rounded-2xl transition-all">
+                        <span>🔴</span> <span>Live Feed</span>
+                    </a>
+                    <a href="highlights.html" class="flex items-center space-x-3 p-3 sidebar-link rounded-2xl transition-all">
+                        <span>🏆</span> <span>Highlights</span>
+                    </a>
+                    <a href="trainings.html" class="flex items-center space-x-3 p-3 sidebar-link rounded-2xl transition-all">
+                        <span>⚽</span> <span>Trainings</span>
+                    </a>
+                    <a href="shorts.html" class="flex items-center space-x-3 p-3 sidebar-link rounded-2xl transition-all">
+                        <span>📱</span> <span>Shorts</span>
+                    </a>
+                </nav>
+            </div>
+
+            <div class="space-y-2 pt-4 border-t border-slate-800">
+                <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest px-3">Account</p>
+                <a href="settings.html" class="flex items-center space-x-3 p-3 sidebar-link rounded-2xl transition-all">
+                    <span>⚙️</span> <span>Settings</span>
+                </a>
+            </div>
         </aside>
 
         <main class="flex-1 p-8">
-            <h2 class="text-3xl font-black mb-6 uppercase italic">Welcome Back</h2>
-            <div class="bg-slate-800/50 p-10 rounded-3xl border border-slate-700 text-center">
-                <p class="text-slate-400">Select a category from the menu to start watching live sports content from Rwanda.</p>
+            <header class="mb-10">
+                <h2 class="text-4xl font-black uppercase italic tracking-tighter mb-2">Sports <span class="theme-accent-text text-yellow-500">Dashboard</span></h2>
+                <p class="text-slate-400 font-medium">Stream Rwanda's finest sports content live and on-demand.</p>
+            </header>
+
+            <div class="glass-card p-10 rounded-[3rem] border-slate-700 text-center mb-10 relative overflow-hidden group">
+                <div class="absolute -right-20 -top-20 w-64 h-64 theme-accent-bg opacity-10 rounded-full blur-3xl group-hover:opacity-20 transition-opacity"></div>
+                
+                <h3 class="text-2xl font-black mb-4 uppercase italic">Ready to watch?</h3>
+                <p class="text-slate-400 max-w-md mx-auto mb-8">Choose a category from the sidebar to view live feeds, match highlights, or training sessions curated for you.</p>
+                
+                <div class="flex flex-wrap justify-center gap-4">
+                    <a href="livefeed.html" class="px-8 py-3 theme-accent-bg text-blue-900 font-black rounded-full uppercase text-xs hover:scale-105 transition-transform">Go Live Now</a>
+                    <a href="highlights.html" class="px-8 py-3 bg-slate-700 text-white font-black rounded-full uppercase text-xs hover:bg-slate-600 transition-colors">Recent Goals</a>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="glass-card p-6 rounded-3xl border-slate-800">
+                    <h4 class="font-black uppercase text-xs mb-4 text-slate-500">Live Status</h4>
+                    <div class="flex items-center space-x-4">
+                        <div class="h-12 w-12 bg-red-500/20 rounded-full flex items-center justify-center">
+                            <div class="h-3 w-3 bg-red-500 rounded-full animate-ping"></div>
+                        </div>
+                        <div>
+                            <p class="font-bold text-sm">System Online</p>
+                            <p class="text-xs text-slate-500 uppercase font-black">Cloud Database Connected</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="glass-card p-6 rounded-3xl border-slate-800">
+                    <h4 class="font-black uppercase text-xs mb-4 text-slate-500">Latest Updates</h4>
+                    <p class="text-xs text-slate-400 leading-relaxed italic">"Check the Highlights section for the latest Amavubi match clips and post-game interviews."</p>
+                </div>
             </div>
         </main>
     </div>
 
     <script>
+        // Supabase Configuration
+        const supabaseUrl = 'https://cukkytzxcrgyiyciisle.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN1a2t5dHp4Y3JneWl5Y2lpc2xlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU5OTU1OTgsImV4cCI6MjA5MTU3MTU5OH0.5xT_ul_eHMHbbRNQKSAcHoTF2zLMrqgc1GXHYOZhD1c';
+        const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
         window.onload = function() {
+            // 1. Theme and Profile Sync
             const name = localStorage.getItem('userName') || 'Nestor';
             const color = localStorage.getItem('themeColor') || '#eab308';
+            
+            // Apply text and initials
             document.getElementById('displayUserName').innerText = name;
             document.getElementById('userInitials').innerText = name.charAt(0).toUpperCase();
-            document.getElementById('mainHeader').style.borderColor = color;
+            
+            // Apply Visual Theme
             document.documentElement.style.setProperty('--accent-color', color);
-            document.querySelectorAll('.theme-accent-bg').forEach(el => el.style.backgroundColor = color);
-            document.querySelectorAll('.theme-accent-border').forEach(el => el.style.borderColor = color);
+            document.getElementById('mainHeader').style.borderColor = color;
+            
+            // Apply background color to all accent elements
+            const accents = document.querySelectorAll('.theme-accent-bg');
+            accents.forEach(el => {
+                el.style.backgroundColor = color;
+            });
+            
+            // Apply border color to all accent borders
+            const borders = document.querySelectorAll('.theme-accent-border');
+            borders.forEach(el => {
+                el.style.borderColor = color;
+            });
+
+            console.log("Supabase Connection Initialized for Project: cukkytzxcrgyiyciisle");
         };
     </script>
 </body>
