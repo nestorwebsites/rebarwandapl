@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HIGHLIGHTS | REBA RWANDA</title>
+    <title>TRAININGS | REBA RWANDA</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
@@ -11,7 +11,7 @@
         body { background-color: #0f172a; color: #f8fafc; }
         .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 1.5rem; background: #000; }
         .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; pointer-events: none; }
-        #videoOverlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 100; justify-content: center; align-items: center; backdrop-filter: blur(8px); }
+        #videoOverlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 100; justify-content: center; align-items: center; }
         .expanded-container { width: 90%; max-width: 1000px; aspect-ratio: 16/9; border: 2px solid var(--accent-color); border-radius: 2rem; overflow: hidden; }
         .theme-accent-bg { background-color: var(--accent-color); }
     </style>
@@ -25,9 +25,7 @@
 
     <header id="mainHeader" class="bg-blue-900 border-b-4 border-yellow-500 p-4 sticky top-0 z-50">
         <div class="container mx-auto flex justify-between items-center">
-            <a href="index.html" class="flex items-center space-x-3">
-                <h1 class="text-xl font-black italic text-white uppercase">Reba Rwanda</h1>
-            </a>
+            <h1 class="text-xl font-black italic text-white uppercase">REBA RWANDA</h1>
             <div id="userInitials" class="h-8 w-8 theme-accent-bg rounded-full flex items-center justify-center text-blue-900 font-bold">N</div>
         </div>
     </header>
@@ -36,13 +34,13 @@
         <aside class="w-64 p-6 border-r border-slate-800 space-y-2 hidden lg:block">
             <a href="index.html" class="block p-3 hover:bg-slate-800 rounded-xl">🏠 Home</a>
             <a href="livefeed.html" class="block p-3 hover:bg-slate-800 rounded-xl">🔴 Live Feed</a>
-            <a href="highlights.html" class="block p-3 theme-accent-bg text-blue-900 font-bold rounded-xl">🏆 Highlights</a>
-            <a href="trainings.html" class="block p-3 hover:bg-slate-800 rounded-xl">⚽ Trainings</a>
+            <a href="highlights.html" class="block p-3 hover:bg-slate-800 rounded-xl">🏆 Highlights</a>
+            <a href="trainings.html" class="block p-3 theme-accent-bg text-blue-900 font-bold rounded-xl">⚽ Trainings</a>
             <a href="shorts.html" class="block p-3 hover:bg-slate-800 rounded-xl">📱 Shorts</a>
         </aside>
 
         <main class="flex-1 p-8">
-            <h2 class="text-2xl font-black mb-8 uppercase italic tracking-tighter">Match Highlights</h2>
+            <h2 class="text-2xl font-black mb-8 uppercase italic tracking-tighter">Football Training Sessions</h2>
             <div id="videoGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
         </main>
     </div>
@@ -50,13 +48,14 @@
     <script>
         const _supabase = supabase.createClient('https://cukkytzxcrgyiyciisle.supabase.co', 'sb_publishable_z9QuZbH-vdV6CATzC7vLLQ_GlafP1yd');
         
-        async function fetchHighlights() {
-            const { data: videos } = await _supabase.from('site_videos').select('*').eq('category', 'highlights').order('created_at', { ascending: false });
+        async function fetchTrainings() {
+            const { data: videos } = await _supabase.from('site_videos').select('*').eq('category', 'trainings').order('created_at', { ascending: false });
             const grid = document.getElementById('videoGrid');
             if(videos) {
                 grid.innerHTML = videos.map(v => `
                     <div class="bg-slate-800/50 p-4 rounded-3xl border border-slate-700 cursor-pointer hover:border-yellow-500 transition-all" onclick="openVideo('${v.url}')">
                         <div class="video-wrapper mb-4"><iframe src="${v.url}"></iframe></div>
+                        <h4 class="font-bold text-sm text-yellow-500 uppercase italic mb-1">Drill Session</h4>
                         <h4 class="font-bold text-sm">${v.title}</h4>
                     </div>
                 `).join('');
@@ -73,7 +72,7 @@
         }
 
         window.onload = function() {
-            fetchHighlights();
+            fetchTrainings();
             const color = localStorage.getItem('themeColor') || '#eab308';
             document.documentElement.style.setProperty('--accent-color', color);
             document.getElementById('mainHeader').style.borderColor = color;
