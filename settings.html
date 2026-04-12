@@ -4,125 +4,124 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SETTINGS | REBA RWANDA</title>
-    <link rel="icon" type="image/jpeg" href="https://rebarwandapl.vercel.app/icon.jpeg">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root { --accent-color: #eab308; }
         body { background-color: #0f172a; color: #f8fafc; }
-        
+        .settings-card { background: rgba(30, 41, 59, 0.5); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 2.5rem; }
+        .color-dot { width: 40px; height: 40px; border-radius: 50%; cursor: pointer; transition: transform 0.2s, border 0.2s; border: 3px solid transparent; }
+        .color-dot:hover { transform: scale(1.1); }
+        .color-dot.active { border-color: white; transform: scale(1.1); }
         .theme-accent-bg { background-color: var(--accent-color); }
-        .theme-accent-border { border-color: var(--accent-color); }
-        .theme-accent-text { color: var(--accent-color); }
-
-        .settings-card {
-            background: rgba(30, 41, 59, 0.7);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 2rem;
-        }
     </style>
 </head>
 <body class="font-sans flex flex-col min-h-screen">
 
-    <header id="mainHeader" class="bg-blue-900 border-b-4 border-yellow-500 sticky top-0 z-50 shadow-2xl">
-        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
-            <a href="index.html" class="flex items-center space-x-4">
-                <img src="https://rebarwandapl.vercel.app/icon.jpeg" alt="Logo" class="h-12 w-12 rounded-full border-2 border-yellow-400 object-cover theme-accent-border">
-                <h1 class="text-xl font-black text-white italic">REBA RWANDA</h1>
+    <header id="mainHeader" class="bg-blue-900 border-b-4 border-yellow-500 p-4 sticky top-0 z-50">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="flex items-center space-x-3">
+                <img src="https://rebarwandapl.vercel.app/icon.jpeg" class="h-10 w-10 rounded-full border-2 border-yellow-500">
+                <h1 class="text-xl font-black italic text-white uppercase tracking-tighter">REBA RWANDA</h1>
             </a>
-            <div class="flex items-center space-x-4">
-                <p id="displayUserName" class="text-white font-black text-sm uppercase">Nestor</p>
-                <div id="userInitials" class="h-10 w-10 bg-yellow-500 rounded-full flex items-center justify-center text-blue-900 font-bold theme-accent-bg">N</div>
-            </div>
+            <div id="userInitials" class="h-10 w-10 theme-accent-bg rounded-full flex items-center justify-center text-blue-900 font-black text-lg">N</div>
         </div>
     </header>
 
     <div class="flex flex-1 container mx-auto">
-        <aside class="hidden lg:block w-64 p-6 border-r border-slate-800 space-y-4">
-            <nav class="space-y-2">
-                <a href="index.html" class="flex items-center space-x-3 p-3 hover:bg-slate-800 rounded-xl transition-all"><span>🏠</span> <span>Home</span></a>
-                <a href="livefeed.html" class="flex items-center space-x-3 p-3 hover:bg-slate-800 rounded-xl transition-all"><span>🔴</span> <span>Live Feed</span></a>
-                <a href="highlights.html" class="flex items-center space-x-3 p-3 hover:bg-slate-800 rounded-xl transition-all"><span>🏆</span> <span>Highlights</span></a>
-                <a href="trainings.html" class="flex items-center space-x-3 p-3 hover:bg-slate-800 rounded-xl transition-all"><span>⚽</span> <span>Trainings</span></a>
-                <a href="shorts.html" class="flex items-center space-x-3 p-3 hover:bg-slate-800 rounded-xl transition-all"><span>📱</span> <span>Shorts</span></a>
-                <a href="settings.html" class="flex items-center space-x-3 p-3 bg-yellow-500 text-black rounded-xl font-bold theme-accent-bg"><span>⚙️</span> <span>Settings</span></a>
+        <aside class="w-64 p-6 border-r border-slate-800 space-y-2 hidden lg:block">
+            <nav class="space-y-1">
+                <a href="index.html" class="block p-3 hover:bg-slate-800 rounded-xl transition-all">🏠 Home</a>
+                <a href="livefeed.html" class="block p-3 hover:bg-slate-800 rounded-xl transition-all">🔴 Live Feed</a>
+                <a href="highlights.html" class="block p-3 hover:bg-slate-800 rounded-xl transition-all">🏆 Highlights</a>
+                <a href="trainings.html" class="block p-3 hover:bg-slate-800 rounded-xl transition-all">⚽ Trainings</a>
+                <a href="shorts.html" class="block p-3 hover:bg-slate-800 rounded-xl transition-all">📱 Shorts</a>
+                <a href="settings.html" class="block p-3 theme-accent-bg text-blue-900 font-bold rounded-xl">⚙️ Settings</a>
             </nav>
         </aside>
 
-        <main class="flex-1 p-8 flex justify-center items-start">
-            <div class="settings-card w-full max-w-lg p-8 space-y-8">
-                <h2 class="text-3xl font-black uppercase italic tracking-tighter theme-accent-text">Configuration</h2>
-                
-                <div class="space-y-6">
-                    <div>
-                        <label class="block text-xs font-black uppercase text-slate-500 mb-2">Display Name</label>
-                        <input type="text" id="nameInput" placeholder="Enter name..." 
-                               class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-yellow-500 transition-all">
-                    </div>
+        <main class="flex-1 p-8 max-w-2xl">
+            <h2 class="text-3xl font-black mb-8 uppercase italic tracking-tighter">Preferences</h2>
 
-                    <div>
-                        <label class="block text-xs font-black uppercase text-slate-500 mb-2">Accent Theme Color</label>
-                        <input type="color" id="colorInput" value="#eab308"
-                               class="w-full h-12 bg-transparent cursor-pointer rounded-lg">
+            <div class="settings-card p-8 space-y-10">
+                <section>
+                    <h3 class="text-xs font-black uppercase text-slate-500 tracking-widest mb-4">Display Profile</h3>
+                    <div class="space-y-4">
+                        <label class="block text-sm font-bold">Your Name</label>
+                        <input type="text" id="nameInput" placeholder="Enter your name" 
+                            class="w-full bg-slate-900 border border-slate-700 p-4 rounded-2xl focus:outline-none focus:ring-2 focus:ring-yellow-500 transition-all">
                     </div>
+                </section>
 
-                    <button onclick="saveSettings()" class="w-full theme-accent-bg text-blue-900 font-black py-4 rounded-xl hover:opacity-90 transition-all uppercase tracking-widest">
-                        Apply Changes
+                <section>
+                    <h3 class="text-xs font-black uppercase text-slate-500 tracking-widest mb-4">Interface Theme</h3>
+                    <p class="text-sm font-bold mb-4">Choose Accent Color</p>
+                    <div class="flex flex-wrap gap-4">
+                        <div class="color-dot bg-yellow-500" data-color="#eab308"></div>
+                        <div class="color-dot bg-blue-500" data-color="#3b82f6"></div>
+                        <div class="color-dot bg-red-600" data-color="#dc2626"></div>
+                        <div class="color-dot bg-green-500" data-color="#22c55e"></div>
+                        <div class="color-dot bg-purple-500" data-color="#a855f7"></div>
+                        <div class="color-dot bg-orange-500" data-color="#f97316"></div>
+                    </div>
+                </section>
+
+                <div class="pt-6">
+                    <button onclick="saveSettings()" class="w-full theme-accent-bg text-blue-900 font-black py-4 rounded-2xl uppercase tracking-widest hover:scale-[1.02] active:scale-95 transition-all">
+                        Save Preferences
                     </button>
-                    
-                    <button onclick="resetSettings()" class="w-full text-slate-500 text-xs font-bold hover:text-white transition-all">
-                        Reset to Defaults
-                    </button>
+                    <p id="saveMsg" class="text-center text-[10px] font-bold text-green-500 mt-4 opacity-0 uppercase tracking-widest transition-opacity">Settings Applied Successfully</p>
                 </div>
             </div>
         </main>
     </div>
 
     <script>
-        // Save to LocalStorage
-        function saveSettings() {
-            const name = document.getElementById('nameInput').value;
-            const color = document.getElementById('colorInput').value;
+        let selectedColor = localStorage.getItem('themeColor') || '#eab308';
 
-            if(name.trim() !== "") {
-                localStorage.setItem('userName', name);
-            }
-            localStorage.setItem('themeColor', color);
-
-            // Apply immediately to current page
-            applyLiveSettings();
-            alert("Settings updated successfully!");
-        }
-
-        function resetSettings() {
-            localStorage.removeItem('userName');
-            localStorage.removeItem('themeColor');
-            location.reload();
-        }
-
-        function applyLiveSettings() {
-            const name = localStorage.getItem('userName') || 'Nestor';
-            const color = localStorage.getItem('themeColor') || '#eab308';
-
-            // Update UI elements
-            document.getElementById('displayUserName').innerText = name;
-            document.getElementById('userInitials').innerText = name.charAt(0).toUpperCase();
-            document.getElementById('mainHeader').style.borderColor = color;
-            
-            // Update Accent styles
-            document.documentElement.style.setProperty('--accent-color', color);
-            document.querySelectorAll('.theme-accent-bg').forEach(el => el.style.backgroundColor = color);
-            document.querySelectorAll('.theme-accent-text').forEach(el => el.style.color = color);
-            document.querySelectorAll('.theme-accent-border').forEach(el => el.style.borderColor = color);
-        }
-
-        // Load settings when page opens
+        // Initialize UI
         window.onload = function() {
-            applyLiveSettings();
-            // Pre-fill inputs with current values
-            document.getElementById('nameInput').value = localStorage.getItem('userName') || '';
-            document.getElementById('colorInput').value = localStorage.getItem('themeColor') || '#eab308';
+            const savedName = localStorage.getItem('userName') || 'Nestor';
+            document.getElementById('nameInput').value = savedName;
+            document.getElementById('userInitials').innerText = savedName.charAt(0).toUpperCase();
+            
+            updateThemeUI(selectedColor);
+
+            // Setup Color Dots
+            const dots = document.querySelectorAll('.color-dot');
+            dots.forEach(dot => {
+                if(dot.dataset.color === selectedColor) dot.classList.add('active');
+                
+                dot.onclick = () => {
+                    dots.forEach(d => d.classList.remove('active'));
+                    dot.classList.add('active');
+                    selectedColor = dot.dataset.color;
+                };
+            });
         };
+
+        function updateThemeUI(color) {
+            document.documentElement.style.setProperty('--accent-color', color);
+            document.getElementById('mainHeader').style.borderColor = color;
+            document.getElementById('userInitials').style.backgroundColor = color;
+            document.querySelectorAll('.theme-accent-bg').forEach(el => el.style.backgroundColor = color);
+        }
+
+        function saveSettings() {
+            const name = document.getElementById('nameInput').value.trim() || 'Nestor';
+            
+            // Save to Storage
+            localStorage.setItem('userName', name);
+            localStorage.setItem('themeColor', selectedColor);
+
+            // Update Header Initials immediately
+            document.getElementById('userInitials').innerText = name.charAt(0).toUpperCase();
+            updateThemeUI(selectedColor);
+
+            // Success Message
+            const msg = document.getElementById('saveMsg');
+            msg.style.opacity = '1';
+            setTimeout(() => msg.style.opacity = '0', 3000);
+        }
     </script>
 </body>
 </html>
