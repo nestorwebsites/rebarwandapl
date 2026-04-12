@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VIDEO MANAGER | ADMIN</title>
+    <title>ADMIN | REBA RWANDA</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root { --accent-color: #eab308; }
         body { background-color: #0f172a; color: #f8fafc; }
@@ -15,92 +16,67 @@
     <div class="max-w-4xl mx-auto">
         <div class="flex justify-between items-center mb-8">
             <h1 class="text-3xl font-black italic">VIDEO <span class="text-yellow-500">MANAGER</span></h1>
-            <a href="index.html" class="bg-slate-800 px-6 py-2 rounded-full text-xs font-bold hover:bg-slate-700">Back to Site</a>
+            <a href="index.html" class="bg-slate-800 px-6 py-2 rounded-full text-xs font-bold hover:bg-slate-700 uppercase">View Site</a>
         </div>
 
         <div class="admin-card p-6 mb-8">
-            <h2 class="text-sm font-black uppercase mb-4 text-yellow-500">Add New Video URL</h2>
+            <h2 class="text-sm font-black uppercase mb-4 text-yellow-500">Add Live URL</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <input type="text" id="vTitle" placeholder="Video Title" class="bg-slate-900 border border-slate-700 p-3 rounded-xl focus:outline-none">
-                <input type="text" id="vUrl" placeholder="YouTube URL" class="bg-slate-900 border border-slate-700 p-3 rounded-xl focus:outline-none">
-                <select id="vCat" class="bg-slate-900 border border-slate-700 p-3 rounded-xl focus:outline-none">
+                <input type="text" id="vTitle" placeholder="Video Title" class="bg-slate-900 border border-slate-700 p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-500">
+                <input type="text" id="vUrl" placeholder="YouTube URL" class="bg-slate-900 border border-slate-700 p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-500">
+                <select id="vCat" class="bg-slate-900 border border-slate-700 p-3 rounded-xl">
                     <option value="livefeed">Live Feed</option>
                     <option value="highlights">Highlights</option>
                     <option value="trainings">Trainings</option>
                     <option value="shorts">Shorts</option>
                 </select>
-                <button onclick="saveVideo()" class="bg-yellow-500 text-blue-900 font-black rounded-xl hover:bg-yellow-400 uppercase text-xs">Save Video</button>
+                <button onclick="saveToCloud()" class="bg-yellow-500 text-blue-900 font-black rounded-xl uppercase text-xs hover:bg-yellow-400">Save to Cloud</button>
             </div>
         </div>
 
         <div class="admin-card p-6">
-            <h2 class="text-sm font-black uppercase mb-4 text-slate-400">Current Site Links</h2>
-            <div id="videoList" class="space-y-3">
-                </div>
+            <h2 class="text-sm font-black uppercase mb-4 text-slate-400">Cloud Registry</h2>
+            <div id="videoList" class="space-y-3"></div>
         </div>
     </div>
 
     <script>
-        function saveVideo() {
+        const _supabase = supabase.createClient('https://cukkytzxcrgyiyciisle.supabase.co', 'sb_publishable_z9QuZbH-vdV6CATzC7vLLQ_GlafP1yd');
+
+        async function saveToCloud() {
             const title = document.getElementById('vTitle').value;
             let url = document.getElementById('vUrl').value;
             const category = document.getElementById('vCat').value;
 
             if(!title || !url) return alert("Fill all fields");
 
-            // Convert standard watch URL to Embed URL if needed
-            if(url.includes("watch?v=")) {
-                url = url.split('v=')[1].split('&')[0];
-                url = "https://www.youtube.com/embed/" + url;
-            } else if (url.includes("youtu.be/")) {
-                url = url.split('be/')[1].split('?')[0];
-                url = "https://www.youtube.com/embed/" + url;
-            }
+            if(url.includes("watch?v=")) url = "https://www.youtube.com/embed/" + url.split('v=')[1].split('&')[0];
+            else if(url.includes("youtu.be/")) url = "https://www.youtube.com/embed/" + url.split('be/')[1].split('?')[0];
 
-            const videoData = JSON.parse(localStorage.getItem('siteVideos') || '[]');
-            videoData.push({ id: Date.now(), title, url, category });
-            localStorage.setItem('siteVideos', JSON.stringify(videoData));
-            
-            document.getElementById('vTitle').value = "";
-            document.getElementById('vUrl').value = "";
-            renderList();
+            const { error } = await _supabase.from('site_videos').insert([{ title, url, category }]);
+            if (error) alert(error.message);
+            else { location.reload(); }
         }
 
-        function renderList() {
-            const videoData = JSON.parse(localStorage.getItem('siteVideos') || '[]');
+        async function renderList() {
+            const { data: videos } = await _supabase.from('site_videos').select('*').order('created_at', { ascending: false });
             const list = document.getElementById('videoList');
-            list.innerHTML = videoData.length ? videoData.map(v => `
-                <div class="flex justify-between items-center bg-slate-800 p-3 rounded-lg border border-slate-700">
-                    <div>
-                        <p class="font-bold text-sm">${v.title}</p>
-                        <p class="text-[10px] uppercase text-yellow-500 font-black">${v.category}</p>
+            if (videos) {
+                list.innerHTML = videos.map(v => `
+                    <div class="flex justify-between items-center bg-slate-900/50 p-3 rounded-xl border border-slate-800">
+                        <div><p class="font-bold text-sm">${v.title}</p><p class="text-[10px] uppercase text-yellow-500 font-black">${v.category}</p></div>
+                        <button onclick="deleteVid(${v.id})" class="text-xs text-red-500 font-bold uppercase hover:underline">Delete</button>
                     </div>
-                    <div class="flex space-x-3">
-                        <button onclick="rename(${v.id})" class="text-xs text-blue-400 font-bold">Rename</button>
-                        <button onclick="remove(${v.id})" class="text-xs text-red-500 font-bold">Remove</button>
-                    </div>
-                </div>
-            `).join('') : '<p class="text-slate-600 text-center py-4">No videos added yet.</p>';
+                `).join('');
+            }
         }
 
-        function remove(id) {
-            let data = JSON.parse(localStorage.getItem('siteVideos') || '[]');
-            data = data.filter(v => v.id !== id);
-            localStorage.setItem('siteVideos', JSON.stringify(data));
-            renderList();
-        }
-
-        function rename(id) {
-            let data = JSON.parse(localStorage.getItem('siteVideos') || '[]');
-            const newTitle = prompt("Enter new title:");
-            if(newTitle) {
-                const vid = data.find(v => v.id === id);
-                vid.title = newTitle;
-                localStorage.setItem('siteVideos', JSON.stringify(data));
+        async function deleteVid(id) {
+            if(confirm("Remove this video?")) {
+                await _supabase.from('site_videos').delete().eq('id', id);
                 renderList();
             }
         }
-
         window.onload = renderList;
     </script>
 </body>
